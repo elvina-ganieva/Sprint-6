@@ -38,34 +38,23 @@ class FileServer {
     }
 
     private fun handle(socket: Socket, fs: VFilesystem) {
-        var clientRequest: List<String>
-        var vPath: VPath
-        var content: String?
-        var response: String
-
-        socket.getInputStream().use { inputStream ->
-            inputStream.bufferedReader().use { reader ->
-                clientRequest = reader.readLine().trim().split("\\s+".toRegex())
-                vPath = VPath(clientRequest[1])
-                content = fs.readFile(vPath)
-                response = getResponse(clientRequest[2], content)
-                write(socket, response)
-            }
-        }
+        val reader = socket.getInputStream().bufferedReader()
+        val clientRequest = reader.readLine().trim().split("\\s+".toRegex())
+        val content = fs.readFile(VPath(clientRequest[1]))
+        val response = getResponse(clientRequest[2], content)
+        write(socket, response)
     }
 
     private fun getResponse(pathToFile: String, content: String?): String {
         val status = if (content == null) "404 Not Found" else "200 OK"
-
         return "$pathToFile ${status}\r\n" +
                 "Server: FileServer\r\n" +
                 "\r\n${content}"
     }
 
     private fun write(socket: Socket, serverResponse: String) {
-        PrintWriter(socket.getOutputStream()).use { writer ->
-            writer.println(serverResponse)
-            writer.flush()
-        }
+        val writer = PrintWriter(socket.getOutputStream())
+        writer.println(serverResponse)
+        writer.flush()
     }
 }
