@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <title>Add address</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Result</h1>
+<p th:text="'name: ' + ${person.name}" />
+<p th:text="'address: ' + ${person.address}" />
+<a href="/app/add">Add another entry</a>
+</body>
+</html>
