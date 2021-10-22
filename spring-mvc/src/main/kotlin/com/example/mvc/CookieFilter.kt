@@ -19,11 +19,12 @@ class CookieFilter : Filter {
             for (cookie in cookies) {
                 if (cookie.name == "auth" && cookie.value < Instant.now().toEpochMilli().toString()) {
                     response.setHeader("cookie", "allowed")
+                    fc?.doFilter(req, resp)
                 } else {
                     response.sendRedirect("/login")
                 }
             }
-        }
-        fc?.doFilter(req, resp)
+        } else
+            response.sendRedirect("/login")
     }
 }
