@@ -3,6 +3,7 @@ package com.example.mvc
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.RestController
 import java.util.concurrent.ConcurrentHashMap
+import javax.servlet.http.HttpServletResponse
 
 @RestController
 @RequestMapping("/api")
@@ -14,10 +15,20 @@ class RestController {
     }
 
     @GetMapping("/list")
-    fun getPersonList(): ConcurrentHashMap<String, Person> = personService.getPersonList()
+    fun getPersonList(response: HttpServletResponse): ConcurrentHashMap<String, Person>? {
+        if (response.getHeader("cookie") == "allowed") {
+            return personService.getPersonList()
+        } else
+            return null
+    }
 
     @GetMapping("/{id}/view")
-    fun getPerson(@PathVariable("id") id: String) = personService.getPerson(id)
+    fun getPerson(@PathVariable("id") id: String, response: HttpServletResponse): Person? {
+        if (response.getHeader("cookie") == "allowed") {
+            return personService.getPerson(id)
+        } else
+            return null
+    }
 
     @PostMapping("/{id}/edit")
     fun updatePerson(@RequestBody person: Person, @PathVariable("id") id: String) {
