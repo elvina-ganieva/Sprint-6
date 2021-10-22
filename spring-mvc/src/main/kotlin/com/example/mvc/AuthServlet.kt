@@ -1,8 +1,10 @@
 package com.example.mvc
 
 import java.io.IOException
+import java.time.Instant
 import javax.servlet.ServletException
 import javax.servlet.annotation.WebServlet
+import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -21,6 +23,8 @@ class AuthServlet : HttpServlet() {
         val userName = request.getParameter("username")
         val password = request.getParameter("password")
         if (userName == accessLogin && password == accessPassword) {
+            val cookie = Cookie("auth", Instant.now().toEpochMilli().toString())
+            response.addCookie(cookie)
             response.sendRedirect("/app/add")
         } else {
             response.sendRedirect("/login")
