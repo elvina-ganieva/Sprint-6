@@ -9,7 +9,7 @@ import javax.servlet.annotation.WebFilter
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-@WebFilter(urlPatterns = ["/app/*", "/api/*"], servletNames = ["AuthServlet"])
+@WebFilter(urlPatterns = ["/app/*", "/api/*"])
 class CookieFilter : Filter {
     override fun doFilter(req: ServletRequest?, resp: ServletResponse?, fc: FilterChain?) {
         val request = req as HttpServletRequest
@@ -18,12 +18,13 @@ class CookieFilter : Filter {
         if (cookies != null) {
             for (cookie in cookies) {
                 if (cookie.name == "auth" && cookie.value < Instant.now().toEpochMilli().toString()) {
-                    response.setHeader("cookie", "allowed")
+                    fc?.doFilter(req, resp)
                 } else {
                     response.sendRedirect("/login")
                 }
             }
+        } else {
+            response.sendRedirect("/login")
         }
-        fc?.doFilter(req, resp)
     }
 }
