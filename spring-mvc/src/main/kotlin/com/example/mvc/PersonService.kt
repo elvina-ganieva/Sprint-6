@@ -7,7 +7,16 @@ import java.util.concurrent.ConcurrentHashMap
 @Service
 class PersonService {
 
-    fun getPersonList(): ConcurrentHashMap<String, Person> = persons
+    fun getPersonList(name: String?, address: String?): Map<String, Person> {
+        if (name != null && address != null)
+            return persons.filter { name == it.value.name && address == it.value.address }
+        else if (name == null && address != null)
+            return persons.filter { address == it.value.address }
+        else if (name != null && address == null)
+            return persons.filter { name == it.value.name }
+        else
+            return persons
+    }
 
     fun getPerson(id: String): Person? = persons[id]
 

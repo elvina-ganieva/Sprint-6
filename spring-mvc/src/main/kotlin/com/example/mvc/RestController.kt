@@ -15,9 +15,11 @@ class RestController {
     }
 
     @GetMapping("/list")
-    fun getPersonList(response: HttpServletResponse): ConcurrentHashMap<String, Person>? {
+    fun getPersonList(response: HttpServletResponse,
+                      @RequestParam(required = false) name: String?,
+                      @RequestParam(required = false) address: String?): Map<String, Person>? {
         if (response.getHeader("cookie") == "allowed") {
-            return personService.getPersonList()
+            return personService.getPersonList(name, address)
         } else
             return null
     }

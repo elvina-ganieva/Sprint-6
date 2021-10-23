@@ -31,9 +31,11 @@ class MvcController {
     }
 
     @GetMapping("/list")
-    fun getPersonList(model: Model, response: HttpServletResponse): String {
+    fun getPersonList(model: Model, response: HttpServletResponse,
+                      @RequestParam(required = false) name: String?,
+                      @RequestParam(required = false) address: String?): String {
         if (response.getHeader("cookie") == "allowed") {
-            model.addAttribute("list", personService.getPersonList())
+            model.addAttribute("list", personService.getPersonList(name, address))
             return "show-all"
         } else
             return "redirect:/login"
