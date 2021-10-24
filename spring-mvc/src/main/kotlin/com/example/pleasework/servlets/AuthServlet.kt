@@ -1,16 +1,18 @@
-package com.example.mvc
+package com.example.pleasework.servlets
 
 import java.io.IOException
 import java.time.Instant
-import javax.servlet.ServletException
+import javax.servlet.*
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-@WebServlet(name = "AuthServlet", value = ["/login"])
-class AuthServlet : HttpServlet() {
+@WebServlet(
+    urlPatterns = ["/login"]
+)
+class AuthServlet: HttpServlet() {
     private val accessLogin = "12345"
     private val accessPassword = "12345"
 

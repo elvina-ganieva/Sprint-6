@@ -1,4 +1,4 @@
-package com.example.mvc
+package com.example.pleasework
 
 import org.hamcrest.CoreMatchers.containsString
 import org.junit.jupiter.api.BeforeEach

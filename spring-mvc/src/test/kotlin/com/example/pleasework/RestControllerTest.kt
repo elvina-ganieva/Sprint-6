@@ -1,5 +1,7 @@
-package com.example.mvc
+package com.example.pleasework
 
+import com.example.pleasework.dao.Person
+import com.example.pleasework.services.PersonService
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
