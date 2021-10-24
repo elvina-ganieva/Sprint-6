@@ -1,11 +1,15 @@
 package com.example.mvc
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api")
 class RestController {
+
+    @Autowired
+    lateinit var personService: PersonService
 
     @PostMapping("/add")
     fun addPerson(@RequestBody person: Person) {
@@ -26,12 +30,13 @@ class RestController {
     }
 
     @PostMapping("/{id}/edit")
-    fun updatePerson(@RequestBody person: Person, @PathVariable("id") id: String) {
+    fun updatePerson(@RequestBody person: Person, @PathVariable("id") id: String): Person? {
         personService.updatePerson(person, id)
+        return personService.getPerson(id)
     }
 
     @DeleteMapping("/{id}/delete")
-    fun deletePerson(@PathVariable("id") id: String) {
-        personService.deletePerson(id)
+    fun deletePerson(@PathVariable("id") id: String): Person? {
+        return personService.deletePerson(id)
     }
 }

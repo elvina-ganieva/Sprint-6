@@ -17,7 +17,8 @@ class CookieFilter : Filter {
         val cookies = request.cookies
         if (cookies != null) {
             for (cookie in cookies) {
-                if (cookie.name == "auth" && cookie.value < Instant.now().toEpochMilli().toString()) {
+                if (cookie.name == "auth" &&
+                    cookie.value < Instant.now().toEpochMilli().toString()) {
                     fc?.doFilter(req, resp)
                 } else {
                     response.sendRedirect("/login")

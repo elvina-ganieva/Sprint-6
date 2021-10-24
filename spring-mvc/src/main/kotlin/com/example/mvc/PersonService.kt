@@ -4,7 +4,7 @@ package com.example.mvc
 import org.springframework.stereotype.Service
 import java.util.concurrent.ConcurrentHashMap
 
-@Service
+@Service()
 class PersonService {
 
     fun getPersonList(name: String?, address: String?): Map<String, Person> {
@@ -15,7 +15,7 @@ class PersonService {
         else if (name != null && address == null)
             return persons.filter { name == it.value.name }
         else
-            return persons
+            return persons.toMap()
     }
 
 
@@ -32,8 +32,8 @@ class PersonService {
         persons[id] = person
     }
 
-    fun deletePerson(id: String) {
-        persons.remove(id)
+    fun deletePerson(id: String): Person? {
+        return persons.remove(id)
     }
 
     companion object {
@@ -41,5 +41,3 @@ class PersonService {
         private var id = 1
     }
 }
-
-val personService = PersonService()

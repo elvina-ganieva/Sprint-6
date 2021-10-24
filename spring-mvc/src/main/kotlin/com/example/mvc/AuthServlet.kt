@@ -2,7 +2,6 @@ package com.example.mvc
 
 import java.io.IOException
 import java.time.Instant
-import java.util.*
 import javax.servlet.ServletException
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.Cookie

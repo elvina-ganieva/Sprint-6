@@ -1,6 +1,7 @@
 package com.example.mvc
 
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
@@ -9,6 +10,9 @@ import org.springframework.web.bind.annotation.*
 @Controller
 @RequestMapping("/app")
 class MvcController {
+
+    @Autowired
+    lateinit var personService: PersonService
 
     @GetMapping("/add")
     fun addForm(person: Person): String {
@@ -34,6 +38,7 @@ class MvcController {
     @GetMapping("/{id}/view")
     fun getPerson(@PathVariable("id") id: String, model: Model): String {
         model.addAttribute("person", personService.getPerson(id))
+        println("person is: " + personService.getPerson(id)?.name)
         return "view-person"
     }
 
