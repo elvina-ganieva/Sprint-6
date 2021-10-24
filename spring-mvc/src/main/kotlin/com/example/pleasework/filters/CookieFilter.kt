@@ -9,12 +9,14 @@ import javax.servlet.annotation.WebFilter
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+
 @WebFilter(urlPatterns = ["/app/*", "/api/*"])
 class CookieFilter : Filter {
     override fun doFilter(req: ServletRequest?, resp: ServletResponse?, fc: FilterChain?) {
         val request = req as HttpServletRequest
         val response = resp as HttpServletResponse
         val cookies = request.cookies
+
         if (cookies != null) {
             for (cookie in cookies) {
                 if (cookie.name == "auth" &&

@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.RestController
 
+
 @RestController
 @RequestMapping("/api")
 class RestController {
-
     @Autowired
     lateinit var personService: PersonService
 
@@ -19,17 +19,12 @@ class RestController {
     }
 
     @GetMapping("/list")
-    fun getPersonList(
-        @RequestParam(name = "name", required = false) name: String?,
-        @RequestParam(name = "address", required = false) address: String?
-    ): Map<String, Person>? {
-        return personService.getPersonList(name, address)
-    }
+    fun getPersonList(@RequestParam(required = false) name: String?,
+                      @RequestParam(required = false) address: String?) =
+        personService.getPersonList(name, address)
 
     @GetMapping("/{id}/view")
-    fun getPerson(@PathVariable("id") id: String): Person? {
-        return personService.getPerson(id)
-    }
+    fun getPerson(@PathVariable("id") id: String) = personService.getPerson(id)
 
     @PostMapping("/{id}/edit")
     fun updatePerson(@RequestBody person: Person, @PathVariable("id") id: String): Person? {
@@ -38,7 +33,5 @@ class RestController {
     }
 
     @DeleteMapping("/{id}/delete")
-    fun deletePerson(@PathVariable("id") id: String): Person? {
-        return personService.deletePerson(id)
-    }
+    fun deletePerson(@PathVariable("id") id: String) = personService.deletePerson(id)
 }

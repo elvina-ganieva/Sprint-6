@@ -26,10 +26,9 @@ class RestControllerTest {
     private lateinit var restTemplate: TestRestTemplate
 
     @Autowired
-    lateinit var personService: PersonService
+    private lateinit var personService: PersonService
 
     private val headers = HttpHeaders()
-
 
     @BeforeAll
     fun setUp() {
@@ -38,40 +37,39 @@ class RestControllerTest {
         personService.addPerson(Person("Till", "Berlin"))
     }
 
+    private fun url(s: String): String {
+        return "http://localhost:${port}/${s}"
+    }
+
     private fun getCookie(): String? {
         val map: MultiValueMap<String, String> = LinkedMultiValueMap()
+
         map.set("username", "12345")
         map.set("password", "12345")
-        val resp: ResponseEntity<String> = restTemplate
-            .postForEntity("http://localhost:${port}/login",
+        val resp: ResponseEntity<String> = restTemplate.postForEntity(url("login"),
             HttpEntity(map, headers), String::class.java)
         return resp.headers["Set-Cookie"]!![0]
     }
 
-    private fun url(s: String): String {
-        return "http://localhost:${port}/api/${s}"
-    }
-
     @Test
     fun `should add a person`() {
-        //        restTemplate.postForObject(url("add"), HttpEntity(Person("Christoph", "Berlin"), headers), Person::class.java)
-        restTemplate.exchange(url("add"),
-            HttpMethod.POST, HttpEntity<Person>(Person("Christoph", "Berlin"), headers),
+        restTemplate.exchange(url("api/add"), HttpMethod.POST,
+            HttpEntity<Person>(Person("Christoph", "Berlin"), headers),
             Person::class.java)
         Assertions.assertEquals("Christoph", personService.getPerson("3")!!.name)
     }
 
     @Test
     fun `should get persons list`() {
-        val resp = restTemplate.exchange(url("list"), HttpMethod.GET, HttpEntity(null, headers),
+        val resp = restTemplate.exchange(url("api/list"), HttpMethod.GET,
+            HttpEntity(null, headers),
             object : ParameterizedTypeReference<Map<String, Person>>() {})
-        val respBody = resp.body
-        Assertions.assertEquals("Elvina", respBody?.get("1")!!.name)
+        Assertions.assertEquals("Elvina", resp.body!!["1"]!!.name)
     }
 
     @Test
     fun `should view a person`() {
-        val resp: ResponseEntity<Person> = restTemplate.exchange(url("1/view"),
+        val resp: ResponseEntity<Person> = restTemplate.exchange(url("api/1/view"),
         HttpMethod.GET, HttpEntity<Person>(null, headers),
             Person::class.java)
         Assertions.assertEquals("Elvina", resp.body!!.name)
@@ -79,23 +77,19 @@ class RestControllerTest {
 
     @Test
     fun `should update a person`() {
-        val id = 1
         val entity = HttpEntity<Person>(Person("Elvina", "Moscow"), headers)
         val resp = restTemplate.exchange(
-            url("${id}/edit"), HttpMethod.POST,
-            entity, Person::class.java, id
-        )
+            url("api/1/edit"), HttpMethod.POST,
+            entity, Person::class.java, 1)
         Assertions.assertEquals("Moscow", resp.body!!.address)
     }
 
     @Test
     fun `should delete a person`() {
-        val id = 1
         val size = personService.getPersonList(null, null).size
-        val resp = restTemplate.exchange(
-            url("${id}/delete"),
-            HttpMethod.DELETE, HttpEntity(null, headers), Person::class.java, id
-        )
+        val resp = restTemplate.exchange(url("api/1/delete"),
+            HttpMethod.DELETE, HttpEntity(null, headers),
+            Person::class.java, 1)
         Assertions.assertTrue(resp.body!!.name == "Elvina")
         Assertions.assertTrue(size - personService.getPersonList(null, null).size == 1)
     }

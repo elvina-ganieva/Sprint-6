@@ -4,20 +4,20 @@ import com.example.pleasework.dao.Person
 import org.springframework.stereotype.Service
 import java.util.concurrent.ConcurrentHashMap
 
-@Service()
+
+@Service
 class PersonService {
 
     fun getPersonList(name: String?, address: String?): Map<String, Person> {
-        if (name != null && address != null)
-            return persons.filter { name == it.value.name && address == it.value.address }
+        return if (name != null && address != null)
+            persons.filter { name == it.value.name && address == it.value.address }
         else if (name == null && address != null)
-            return persons.filter { address == it.value.address }
+            persons.filter { address == it.value.address }
         else if (name != null && address == null)
-            return persons.filter { name == it.value.name }
+            persons.filter { name == it.value.name }
         else
-            return persons.toMap()
+            persons
     }
-
 
     fun getPerson(id: String): Person? = persons[id]
 
@@ -32,9 +32,7 @@ class PersonService {
         persons[id] = person
     }
 
-    fun deletePerson(id: String): Person? {
-        return persons.remove(id)
-    }
+    fun deletePerson(id: String) = persons.remove(id)
 
     companion object {
         private val persons = ConcurrentHashMap<String, Person>()

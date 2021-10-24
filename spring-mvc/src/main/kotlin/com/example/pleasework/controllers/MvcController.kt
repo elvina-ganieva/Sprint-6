@@ -11,14 +11,11 @@ import org.springframework.web.bind.annotation.*
 @Controller
 @RequestMapping("/app")
 class MvcController {
-
     @Autowired
     lateinit var personService: PersonService
 
     @GetMapping("/add")
-    fun addForm(person: Person): String {
-        return "add-form"
-    }
+    fun addForm(person: Person) = "add-form"
 
     @PostMapping("/add")
     fun addPerson(@ModelAttribute("person") person: Person, model: Model): String {
@@ -27,11 +24,9 @@ class MvcController {
     }
 
     @GetMapping("/list")
-    fun getPersonList(
-        model: Model,
+    fun getPersonList(model: Model,
         @RequestParam(required = false) name: String?,
-        @RequestParam(required = false) address: String?
-    ): String {
+        @RequestParam(required = false) address: String?): String {
         model.addAttribute("list", personService.getPersonList(name, address))
         return "show-all"
     }
@@ -39,7 +34,6 @@ class MvcController {
     @GetMapping("/{id}/view")
     fun getPerson(@PathVariable("id") id: String, model: Model): String {
         model.addAttribute("person", personService.getPerson(id))
-        println("person is: " + personService.getPerson(id)?.name)
         return "view-person"
     }
 
@@ -50,10 +44,8 @@ class MvcController {
     }
 
     @PostMapping("/{id}/edit")
-    fun updatePerson(
-        @ModelAttribute("person") person: Person,
-        @PathVariable("id") id: String
-    ): String {
+    fun updatePerson(@ModelAttribute("person") person: Person,
+        @PathVariable("id") id: String): String {
         personService.updatePerson(person, id)
         return "edit-result"
     }
